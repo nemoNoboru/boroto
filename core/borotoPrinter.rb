@@ -1,4 +1,4 @@
-require './borotoClass.rb'
+require './core/borotoClass.rb'
 
 class BorotoPrinter
   # {!} class BorotoPrinter, gets an BorotoClass and print it out to a php class
@@ -7,7 +7,7 @@ class BorotoPrinter
   #{!} method initialize(BorotoClass) creates a string buffer and gets handle of a borotoclass. Returns nil if borotoclass is nil
   def initialize borotoclass
     if ! borotoclass
-      return nil
+      raise "error: trying to create a class with no name"
     end
     # {!} atribute borotoclass a handle of borotoclass passed in the initialize function
     @borotoClass = borotoclass
@@ -30,18 +30,18 @@ class BorotoPrinter
     put "<?php"
     put "/* class generated automaticaly with Boroto */"
     put "/* Felipe Vieira, 2015 */"
-    put
-    put "class #{@borotoclass.name}"
+    put ""
+    put "class #{@borotoClass.name.capitalize}"
     printAtributes
     printGetters
     printSetters
-    put
+    put ""
     put "?>"
   end
 
   # {!} method checkAtributes a helper method to check if the borotoclass have 0 atributes. if so print a error
   def checkAtributes
-    if @borotoclass.atributes.empty?
+    if @borotoClass.atributes.empty?
       put " /* ALERT this class doesn't have atributes. this is almost absurd */"
       return false
     end
@@ -51,7 +51,7 @@ class BorotoPrinter
   #{!} method printAtributes print each atribute of the class. invokes checkAtributes
   def printAtributes
     if checkAtributes
-      @borotoclass.atributes.each do |atribute|
+      @borotoClass.atributes.each do |atribute|
         put " private #{phpize(atribute)};"
       end
     end
@@ -60,8 +60,8 @@ class BorotoPrinter
   # {!} method print a getter function (getX():X) for each atribute
   def printGetters
     if checkAtributes
-      @borotoclass.atributes.each do |atribute|
-        put " public function get#{atribute}(){"
+      @borotoClass.atributes.each do |atribute|
+        put " public function get#{atribute.capitalize}(){"
         put "   return $this->#{atribute};"
         put " }"
       end
@@ -70,11 +70,20 @@ class BorotoPrinter
   #{!} method print a setter function for each atribute
   def printSetters
     if checkAtributes
-      @borotoclass.atributes.each do |atribute|
-        put " public function set#{atribute}(value){"
+      @borotoClass.atributes.each do |atribute|
+        put " public function set#{atribute.capitalize}(value){"
         put "   $this->#{atribute} = value;"
         put " }"
       end
     end
+  end
+
+  def save
+    output = File.open("#{@borotoClass.name}.php","w")
+    output.puts @buffer
+    output.close
+  rescue IOError => err
+    puts "error printing to file #{@borotoClass.name}.php"
+    puts err
   end
 end

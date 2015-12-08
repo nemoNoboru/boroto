@@ -18,3 +18,4 @@ class BorotoClass
     end
     return false
   end
+end

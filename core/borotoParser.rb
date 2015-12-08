@@ -1,10 +1,11 @@
-require './BorotoClass.rb'
+require './core/borotoClass.rb'
 # {!} class BorotoParser, reads a raw line of sql and creates the adecuate borotoClass
 # {!} info made by Felipe Vieira, for roboto, 2015
-class borotoParser
+class BorotoParser
+  attr_reader :bcArray
   def initialize
     @bcArray = Array.new
-    @patternInit = /create table +[^`]+`(.+)`/
+    @patternInit = /create table +[^`]+`(.+)`/i
     @patternAtr = /`(.+)`/
     @patternEnd = /;/
     @actualNode = nil
@@ -12,19 +13,19 @@ class borotoParser
   end
 
   def parse raw
-    if flag
-      if result = @patternAtr.match raw
+    if @flag
+      if result = @patternAtr.match(raw)
         pushAtr result[1]
         return true
       end
-      if result = @patternEnd.match raw
+      if result = @patternEnd.match(raw)
         @flag = false
         return true
       end
       return false
     end
 
-    if result = @patternInit.match raw
+    if result = @patternInit.match(raw)
       pushCls result[1]
       @flag = true
       return true
