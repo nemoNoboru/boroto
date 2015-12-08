@@ -9,7 +9,9 @@ class BorotoPrinter
     if ! borotoclass
       return nil
     end
+    # {!} atribute borotoclass a handle of borotoclass passed in the initialize function
     @borotoClass = borotoclass
+    # {!} atribute buffer, the string to be printed.
     @buffer = ""
   end
 
