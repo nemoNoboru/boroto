@@ -19,7 +19,7 @@ if ARGV.length > 1
   puts "too much arguments"
   displayHelp
 end
-puts "Boroto, Version 1.0.0. Reading file #{ARGV[0]}"
+puts "Boroto, Version ActiveRecord 2.0.0. Reading file #{ARGV[0]}"
 puts "Initializing..."
 parser = BorotoParser.new
 
