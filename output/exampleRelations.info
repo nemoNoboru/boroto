@@ -1,0 +1,45 @@
+example usage and making relations in the classes
+
+require 'Funcionalidad.php';
+
+$driver = Driver::getInstance();
+
+$funcionalidades = new Funcionalidad($driver);
+$requiredFun = $funcionalidades->findBy('fun_name','"WPA_alta"');
+
+$paginas = $requiredFun[0]->paginasv2();
+foreach ($paginas as $pagina) {
+  echo $pagina->getPag_desc();
+}
+
+// function existing in "Funcionalidad"
+
+public function paginasv1(){
+  $arrayToRet = Array();
+  $pagfun = new Pag_Fun($this->driver);
+  $pagina = new Pagina($this->driver);
+  $selecpag = $pagfun->findBy('fun_id',$this->getFun_id());
+  if($selecpag){
+    foreach($selecpag as $pag){
+      $finalpag = $pagina->findBy('pag_id',$pag->getPag_id());
+      array_push($arrayToRet,$finalpag[0]);
+    }
+    return $arrayToRet;
+  }
+return false;
+}
+
+public function paginasv2(){
+  $toret = Array();
+  $query = "select * from Funcionalidad, Pagina, Pag_Fun where
+    Funcionalidad.fun_id = ".$this->getFun_id()." and
+    Pag_Fun.fun_id = Funcionalidad.fun_id and
+    Pag_Fun.pag_id = Pagina.pag_id";
+  $results = $this->driver->exec($query);
+  foreach($results as $result){
+    $t = new Pagina($this->driver);
+    $t->fill($result);
+    array_push($toret,$t);
+  }
+  return $toret;
+}

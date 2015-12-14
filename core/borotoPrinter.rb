@@ -35,7 +35,7 @@ class BorotoPrinter
     put ""
     put "class #{@borotoClass.name.capitalize}{"
     put ""
-    put "public $driver;"
+    put " public $driver;"
     printAtributes
     put ""
     put " public function #{@borotoClass.name.capitalize}($driver) {"
@@ -46,22 +46,29 @@ class BorotoPrinter
     put "   $this->driver = $driver;"
     put " }"
     put ""
+    put "/* get an array_fetch from driver and fill the atributes of $this */"
     put " public function fill($arrayassoc) {"
     @borotoClass.atributes.each do |atribute|
       put "  $this->set#{atribute.capitalize}($arrayassoc['#{atribute}']);"
     end
     put " }"
     put ""
+    put "/* Getters... */"
     printGetters
     put ""
+    put "/* Setters... */"
     printSetters
     put ""
+    put "/* check the existance of a value */"
     checkIfExist
     put ""
+    put "/* Returns an array of #{@BorotoClass.name} that have some value */"
     findBy
     put ""
+    put "/* deletes from db */"
     destroyRecord
     put ""
+    put "/* saves to db */"
     saveRecord
     put ""
     put "}"
@@ -108,6 +115,7 @@ class BorotoPrinter
   end
 
   def checkIfExist
+    put " /* check the existance of a value */"
     put " public function checkExistence($key,$value){ "
     put "   $query='select '.$key.'from #{@borotoClass.name} where '.$key.'='.$value;"
     put "   $result = $this->driver->exec();"
@@ -117,6 +125,7 @@ class BorotoPrinter
 
   def findBy
     if checkAtributes
+      put " /* return an array containing all #{@borotoClass.name} that key = value */"
       put " public function findBy($key,$value){ "
       put "   $arraytoret = array();"
       put "   $query='select *"
@@ -136,6 +145,7 @@ class BorotoPrinter
       put "   return $arraytoret;"
       put "}"
       put ""
+      put "/* returns an array of #{@borotoClass.name} containing all rows from db */"
       put " public function all(){ "
       put "   $arraytoret = array();"
       put "   $query='select *"
