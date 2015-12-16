@@ -5,9 +5,11 @@ require './core/borotoPrinter.rb'
 require './core/borotoParser.rb'
 # {!} function functions displayHelp, a simple function to display an usage mesage
 def displayHelp
-  puts "Usage: boroto.rb <name-of-document-to-parse>"
-  puts "Boroto: PHP Class generator from SQL"
+  puts ""
+  puts "Usage: ./boroto <name-of-document-to-parse>"
+  puts "Boroto: PHP Class with ActiveRecord and primitive ORM generator from SQL"
   puts "Made by Felipe Vieira"
+  exit
 end
 
 if ARGV.length == 0
@@ -19,15 +21,16 @@ if ARGV.length > 1
   puts "too much arguments"
   displayHelp
 end
-puts "Boroto, Version ActiveRecord 2.0.0. Reading file #{ARGV[0]}"
+puts "Boroto, Version ActiveRecord 2.0.1. Reading file #{ARGV[0]}"
 puts "Initializing..."
 parser = BorotoParser.new
 
-puts "Parsing..."
 counterlines = 0
 parsedlines = 0
+
 begin
   input = File.open(ARGV[0],"r")
+  puts "Parsing..."
   while (buffer = input.gets)
 
     if parser.parse buffer
@@ -37,22 +40,28 @@ begin
 
   end
   input.close
-rescue IOError => err
+rescue Exception => err
   puts "Error reading file"
   puts err
+  displayHelp
+  puts "exit"
 end
+
+puts "#{counterlines} lines processed"
+puts "#{parsedlines} lines parsed"
 puts "Parsed"
-puts "#{counterlines} processed"
-puts "#{parsedlines} parsed"
-puts "Processing..."
+puts "Writing to file..."
 if parser.bcArray.empty?
   puts "no classes have been found"
   exit
 end
-
+parser.bcArray.each do |boroto|
+  puts "#{boroto.name} \tclass found"
+end
+puts "Writing to disk..."
 parser.bcArray.each do |borotoclass|
   newPrinter = BorotoPrinter.new borotoclass
   newPrinter.printClass
   newPrinter.save
 end
-puts "Processed"
+puts "Completed"

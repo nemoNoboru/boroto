@@ -59,10 +59,10 @@ class BorotoPrinter
     put "/* Setters... */"
     printSetters
     put ""
-    put "/* check the existance of a value */"
-    checkIfExist
+    #checkIfExist
     put ""
-    put "/* Returns an array of #{@BorotoClass.name} that have some value */"
+    factory
+    put ""
     findBy
     put ""
     put "/* deletes from db */"
@@ -73,6 +73,21 @@ class BorotoPrinter
     put ""
     put "}"
     put "?>"
+  end
+
+  def factory
+    put "/* factory method, takes an array of mysqli::array_fetch and returns a array of #{@borotoClass.name} */"
+    put " public function factory($arrayfetch){"
+    put "   $arraytoret = Array();"
+    put "   if($arrayfetch){"
+    put "     foreach($arrayfetch as $fetch){"
+    put "       $newObject = new #{@borotoClass.name}($this->driver);"
+    put "       $newObject->fill($fetch);"
+    put "       array_push($arraytoret,$newObject);"
+    put "     }"
+    put "   }"
+    put " return $arraytoret;"
+    put " }"
   end
 
   # {!} method checkAtributes a helper method to check if the borotoclass have 0 atributes. if so print a error
@@ -135,14 +150,7 @@ class BorotoPrinter
       put "     from #{@borotoClass.name}"
       put "     where '.$key.'='.$value;"
       put "   $results = $this->driver->exec($query);"
-      put "   foreach($results as $result) {"
-      put "     if($result){"
-      put "       $newObject = new #{@borotoClass.name}($this->driver);"
-      put "         $newObject->fill($result);"
-      put "       array_push($arraytoret,$newObject);"
-      put "     }"
-      put "   }"
-      put "   return $arraytoret;"
+      put "   return $this->factory($results);"
       put "}"
       put ""
       put "/* returns an array of #{@borotoClass.name} containing all rows from db */"
@@ -154,14 +162,7 @@ class BorotoPrinter
       #end
       put "     from #{@borotoClass.name}';"
       put "   $results = $this->driver->exec($query);"
-      put "   foreach($results as $result) {"
-      put "     if($result){"
-      put "       $newObject = new #{@borotoClass.name}($this->driver);"
-      put "         $newObject->fill($result);"
-      put "       array_push($arraytoret,$newObject);"
-      put "     }"
-      put "   }"
-      put "   return $arraytoret;"
+      put "   return $this->factory($results);"
       put "}"
     end
   end
