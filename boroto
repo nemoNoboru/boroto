@@ -3,7 +3,7 @@
 # {!} info It reads an filename from arguments , parse the lines and print them.
 require './core/borotoPrinter.rb'
 require './core/borotoParser.rb'
-$borotoVersion = 3.0.0
+$borotoVersion = "3.0.0"
 # {!} function functions displayHelp, a simple function to display an usage mesage
 def displayHelp
   puts ""
