@@ -187,6 +187,7 @@ class BorotoPrinter
     put "   $this->driver->exec($query);"
     put "}"
     buffer.shift
+    @borotoClass.atributes.shift
     put " public function create() {"
     put "   $query = 'insert into #{@borotoClass.name} (#{@borotoClass.atributes.join(",")}) values (#{buffer.join(",")})';"
     put "   $this->driver->exec($query);"
