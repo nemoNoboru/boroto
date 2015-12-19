@@ -29,7 +29,6 @@ class BorotoPrinter
   def printClass
     put "<?php"
     put "/* the ORM and activeRecord needs a driver. it should be named driver.php */"
-    put "require 'driver.php';"
     put "/* class generated automaticaly with Boroto */"
     put "/* Felipe Vieira, 2015 */"
     put ""
