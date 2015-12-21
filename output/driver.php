@@ -24,7 +24,7 @@ class Driver {
     if(isset($this->db)){
       return true;
     }else{
-      $this->db = new mysqli('localhost','root','wintermuteruby1','GSTRDB');
+      $this->db = new mysqli('localhost','AdminGSTR','AdminPass','GSTRDB');
       if ($this->db->connect_errno) {
           echo "error connecting to BBDD";
           die("Failed to connect to MySQL: " . $this->db->connect_error);

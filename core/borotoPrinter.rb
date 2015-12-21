@@ -147,7 +147,7 @@ class BorotoPrinter
       #  put "   #{atribute}"
       #end
       put "     from #{@borotoClass.name}"
-      put "     where '.$key.'='.$value;"
+      put "     where '.$key.'=\"'.$value.'\"';"
       put "   $results = $this->driver->exec($query);"
       put "   return $this->factory($results);"
       put "}"
